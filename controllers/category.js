@@ -31,8 +31,8 @@ export const update = async (req, res) => {
         name,
         slug: slugify(name),
       },
-      { new: true }
-    );
+      { new: true }//if we are not using new:true then user can not get updated category means he will get previous category
+    );//alway use new:true when we want to update any thing and send updated value
     res.json(category);
   } catch (err) {
     console.log(err);

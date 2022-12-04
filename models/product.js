@@ -23,10 +23,10 @@ const productSchema = new mongoose.Schema(
       trim: true,
       required: true,
     },
-    category: {
-      type: ObjectId,
-      ref: "Category",
-      required: true,
+    category: { //means each product must have category
+      type: ObjectId, 
+      ref: "Category", // means here if user select any category then categoryId will set here (type:ObjectId) because ref:"Category" is represent the Category Model
+      required: true, //for gettin g the category name from the Category Model for resnding res to user we will use populate()
     },
     quantity: {
       type: Number,

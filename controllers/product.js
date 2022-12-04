@@ -18,11 +18,11 @@ const gateway = new braintree.BraintreeGateway({
 
 export const create = async (req, res) => {
   try {
-    // console.log(req.fields);
-    // console.log(req.files);
+    // console.log(req.fields);//for getting forms-data 
+    // console.log(req.files);//for getting forms-data files like photo
     const { name, description, price, category, quantity, shipping } =
-      req.fields;
-    const { photo } = req.files;
+      req.fields; //getting only form fileds or form data
+    const { photo } = req.files; // getting forms files data
 
     // validation
     switch (true) {
@@ -38,7 +38,7 @@ export const create = async (req, res) => {
         return res.json({ error: "Quantity is required" });
       case !shipping.trim():
         return res.json({ error: "Shipping is required" });
-      case photo && photo.size > 1000000:
+      case photo && photo.size > 1000000: // means 1mb
         return res.json({ error: "Image should be less than 1mb in size" });
     }
 
@@ -61,7 +61,7 @@ export const create = async (req, res) => {
 export const list = async (req, res) => {
   try {
     const products = await Product.find({})
-      .populate("category")
+      .populate("category") //means based on categoryId .populate("category") we can get the category name and slug from the Category Database
       .select("-photo")
       .limit(12)
       .sort({ createdAt: -1 });
@@ -160,12 +160,12 @@ export const update = async (req, res) => {
 
 export const filteredProducts = async (req, res) => {
   try {
-    const { checked, radio } = req.body;
-
+    const { checked, radio } = req.body;//here sometime we will get both checked and radio but sametime we will get checked or radio its depend on user how he use filtered check and radio button
+      //checked=> array of categoriesId adn radio = [0, 19] or [20, 39] or ....
     let args = {};
-    if (checked.length > 0) args.category = checked;
-    if (radio.length) args.price = { $gte: radio[0], $lte: radio[1] };
-    console.log("args => ", args);
+    if (checked.length > 0) args.category = checked;//means if checked array have some value// args.category = checked means args={category:[all checked categoriesId]}
+    if (radio.length) args.price = { $gte: radio[0], $lte: radio[1] };//means if radio aray have a value then args.price={}, means args={category:[], price:{price>=0, price2<=19}} for radio=[0, 19]// where {$gte=> >= , $lte=> <= } => {0 , 1, 2, 3, 4, .....,19}
+   // console.log("args => ", args);
 
     const products = await Product.find(args);
     console.log("filtered products query => ", products.length);
